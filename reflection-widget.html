@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Written Reflection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: linear-gradient(160deg, #fdf6ec 0%, #fef9f4 60%, #f5ede8 100%);
+      min-height: 100vh;
+      padding: 48px 24px 64px;
+      font-family: 'Lora', serif;
+    }
+
+    .wrap { max-width: 640px; margin: 0 auto; }
+
+    .pill {
+      display: inline-block;
+      background: #6B5EA8;
+      color: white;
+      font-family: 'Lora', serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 5vw, 40px);
+      font-weight: 700;
+      color: #1a1208;
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #6b5a47;
+      line-height: 1.75;
+      margin-bottom: 32px;
+      font-weight: 400;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #6B5EA8;
+      margin-bottom: 10px;
+    }
+
+    .ai-question {
+      background: #1a1208;
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .ai-question::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      background: rgba(107,94,168,0.15);
+    }
+
+    .ai-question p {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(16px, 2.5vw, 20px);
+      font-style: italic;
+      color: rgba(255,255,255,0.92);
+      line-height: 1.75;
+      position: relative;
+    }
+
+    .ai-question .q-label {
+      font-family: 'Lora', serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #c4a98a;
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .you-wrote {
+      background: rgba(255,255,255,0.7);
+      border: 2px solid #e8d5c4;
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 20px;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .you-wrote p {
+      font-size: 14px;
+      color: #2a1f14;
+      line-height: 1.75;
+      font-style: italic;
+    }
+
+    textarea {
+      width: 100%;
+      border: 2px solid #e8d5c4;
+      border-radius: 14px;
+      padding: 18px 20px;
+      font-family: 'Lora', serif;
+      font-size: 15px;
+      color: #2a1f14;
+      background: rgba(255,255,255,0.8);
+      resize: none;
+      outline: none;
+      line-height: 1.7;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      margin-bottom: 14px;
+    }
+
+    textarea:focus {
+      border-color: #6B5EA8;
+      box-shadow: 0 0 0 4px rgba(107,94,168,0.1);
+    }
+
+    textarea::placeholder { color: #c4a98a; font-style: italic; }
+
+    .btn {
+      background: #1a1208;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 32px;
+      font-family: 'Lora', serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease;
+      letter-spacing: 0.02em;
+      display: block;
+      margin-left: auto;
+    }
+
+    .btn:hover { background: #6B5EA8; transform: translateY(-1px); }
+    .btn:disabled { background: #c4a98a; cursor: not-allowed; transform: none; }
+
+    .final-card {
+      background: linear-gradient(135deg, #eeebf8, #fde8df);
+      border-radius: 20px;
+      padding: 32px 36px;
+      border: 2px solid rgba(107,94,168,0.2);
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .final-card p {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(16px, 2.2vw, 19px);
+      color: #1a1208;
+      line-height: 1.8;
+    }
+
+    .error-box {
+      background: #fff0ed;
+      border: 1.5px solid #e07b54;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-family: 'Lora', serif;
+      font-size: 12px;
+      color: #a03a1a;
+      margin-top: 10px;
+      word-break: break-all;
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 0;
+    }
+
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #6B5EA8;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 12px;
+      color: #b09880;
+      font-style: italic;
+    }
+
+    .step { display: none; }
+    .step.active { display: block; animation: fadeUp 0.5s ease forwards; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="header" style="margin-bottom:32px;">
+    <div class="pill">Lesson 1 · Written Reflection</div>
+    <h1>Think of one specific student.</h1>
+    <p class="subtitle">Not a type of student. Not a category. One actual kid who has been on your mind. Describe what you notice about them, what you see, what you feel, what has been nagging at you.</p>
+  </div>
+
+  <!-- Step 1: First reflection -->
+  <div id="step-1" class="step active">
+    <div class="section-label">Your reflection</div>
+    <textarea id="input-1" rows="6" placeholder="There is this one student who sits in the back and never causes problems, but I cannot shake the feeling that they are completely checked out..."></textarea>
+    <div id="error-1" class="error-box" style="display:none;"></div>
+    <button class="btn" onclick="submitStep1()">Submit</button>
+  </div>
+
+  <!-- Step 2: AI follow up question + second reflection -->
+  <div id="step-2" class="step">
+    <div class="you-wrote" id="wrote-1-display">
+      <div class="section-label" style="margin-bottom:8px;">You wrote</div>
+      <p id="wrote-1-text"></p>
+    </div>
+    <div class="ai-question" id="ai-q2">
+      <div class="q-label">A question for you</div>
+      <div id="loading-2" class="loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <p id="ai-q2-text" style="display:none;"></p>
+    </div>
+    <div id="reflect-2-wrap" style="display:none;">
+      <div class="section-label">Your reflection</div>
+      <textarea id="input-2" rows="5" placeholder="Write what comes up for you..."></textarea>
+      <div id="error-2" class="error-box" style="display:none;"></div>
+      <button class="btn" onclick="submitStep2()">Submit</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Final AI response -->
+  <div id="step-3" class="step">
+    <div class="you-wrote" id="wrote-2-display">
+      <div class="section-label" style="margin-bottom:8px;">You wrote</div>
+      <p id="wrote-2-text"></p>
+    </div>
+    <div class="final-card" id="final-card">
+      <div class="section-label" style="color:#6B5EA8;margin-bottom:16px;">Keep going</div>
+      <div id="loading-3" class="loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <p id="final-text" style="display:none;"></p>
+    </div>
+    <div class="footer">From Checked Out to Checked In · Lesson 1</div>
+  </div>
+
+</div>
+
+<script>
+  const KEY = "AIzaSyBPJZpj3OM-9enq9SoR-U3MXf8pWi2Va3M";
+  const URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + KEY;
+
+  let reflection1 = "";
+  let reflection2 = "";
+
+  const PROMPT_Q2 = `You are the warm, spirited voice of a young female instructor inside a self-paced eLearning course called "From Checked Out to Checked In: Practical Strategies to Re-Engage Your Students."
+
+A teacher just described a student they are concerned about. Your job is to ask them ONE follow up question that pushes them to think more deeply about why that student is behaving the way they are, or what might be driving it, or what the teacher could do differently to reach that student.
+
+Rules:
+- Ask exactly ONE question. Specific to what the teacher wrote.
+- Do not diagnose the student. Do not give advice yet.
+- Sound warm, direct, and real. Not corporate. Not clinical.
+- Do not start with "That sounds..." or "It sounds like..." or "Wow" or "Great."
+- 2 sentences max. One grounding sentence then the question.
+- Young female energy. Teacher to teacher.`;
+
+  const PROMPT_FINAL = `You are the warm, spirited voice of a young female instructor inside a self-paced eLearning course called "From Checked Out to Checked In: Practical Strategies to Re-Engage Your Students."
+
+A teacher has just completed a two part reflection about a student they are concerned about. They described the student and then reflected on why that student might be disengaged or what they could do differently.
+
+Your job is to write a short encouraging closing response that does three things:
+1. Acknowledges what they just uncovered about themselves or their student through this reflection.
+2. Makes them feel like a capable teacher who is already doing something powerful just by noticing and reflecting.
+3. Encourages them to keep going through the course because the next lessons will give them real tools and real answers to what they are already thinking about.
+
+Rules:
+- 3 to 4 sentences max.
+- Warm, encouraging, direct. Young female energy. Not corporate.
+- Do not start with "That's..." or "Wow" or "Great insight."
+- Make them feel seen. Make them want to keep learning.`;
+
+  async function callGemini(systemPrompt, messages) {
+    const contents = messages.map(m => ({
+      role: m.role === "assistant" ? "model" : "user",
+      parts: [{ text: m.content }]
+    }));
+
+    const res = await fetch(URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents,
+        generationConfig: { maxOutputTokens: 300 }
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(JSON.stringify(err));
+    }
+
+    const data = await res.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) throw new Error("No response received.");
+    return text;
+  }
+
+  async function submitStep1() {
+    const input = document.getElementById("input-1").value.trim();
+    if (!input) return;
+    reflection1 = input;
+
+    const btn = document.querySelector("#step-1 .btn");
+    btn.disabled = true;
+    btn.textContent = "Sending...";
+    document.getElementById("error-1").style.display = "none";
+
+    try {
+      document.getElementById("step-1").classList.remove("active");
+      document.getElementById("header").style.display = "none";
+      document.getElementById("wrote-1-text").textContent = reflection1;
+      document.getElementById("step-2").classList.add("active");
+
+      const q2 = await callGemini(PROMPT_Q2, [
+        { role: "user", content: reflection1 }
+      ]);
+
+      document.getElementById("loading-2").style.display = "none";
+      const q2el = document.getElementById("ai-q2-text");
+      q2el.textContent = q2;
+      q2el.style.display = "block";
+      document.getElementById("reflect-2-wrap").style.display = "block";
+
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = "Submit";
+      document.getElementById("step-1").classList.add("active");
+      document.getElementById("header").style.display = "block";
+      document.getElementById("step-2").classList.remove("active");
+      const err = document.getElementById("error-1");
+      err.textContent = "Error: " + e.message;
+      err.style.display = "block";
+    }
+  }
+
+  async function submitStep2() {
+    const input = document.getElementById("input-2").value.trim();
+    if (!input) return;
+    reflection2 = input;
+
+    const btn = document.querySelector("#step-2 .btn");
+    btn.disabled = true;
+    btn.textContent = "Sending...";
+    document.getElementById("error-2").style.display = "none";
+
+    try {
+      document.getElementById("step-2").classList.remove("active");
+      document.getElementById("wrote-2-text").textContent = reflection2;
+      document.getElementById("step-3").classList.add("active");
+
+      const final = await callGemini(PROMPT_FINAL, [
+        { role: "user", content: reflection1 },
+        { role: "assistant", content: document.getElementById("ai-q2-text").textContent },
+        { role: "user", content: reflection2 }
+      ]);
+
+      document.getElementById("loading-3").style.display = "none";
+      const finalEl = document.getElementById("final-text");
+      finalEl.textContent = final;
+      finalEl.style.display = "block";
+
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = "Submit";
+      document.getElementById("step-2").classList.add("active");
+      document.getElementById("step-3").classList.remove("active");
+      const err = document.getElementById("error-2");
+      err.textContent = "Error: " + e.message;
+      err.style.display = "block";
+    }
+  }
+</script>
+</body>
+</html>
