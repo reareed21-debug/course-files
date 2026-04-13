@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Disengagement Checklist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #6B5EA8;
+      --purple-light: #eeebf8;
+      --purple-mid: #d4cdf0;
+      --orange: #e07b54;
+      --orange-light: #fdf0e8;
+      --text-dark: #1a1208;
+      --text-mid: #6b5a47;
+      --text-light: #b09880;
+      --bg: linear-gradient(160deg, #fdf6ec 0%, #fef9f4 60%, #f5ede8 100%);
+    }
+
+    body {
+      background: var(--bg);
+      min-height: 100vh;
+      padding: 48px 24px 64px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .wrap { max-width: 680px; margin: 0 auto; }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+
+    .pill {
+      display: inline-block;
+      background: var(--purple);
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 900;
+      color: var(--text-dark);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-mid);
+      line-height: 1.7;
+      font-weight: 300;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .section {
+      margin-bottom: 28px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .section:nth-child(1) { animation-delay: 0.2s; }
+    .section:nth-child(2) { animation-delay: 0.35s; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--purple-mid);
+    }
+
+    .section-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .tag-obvious {
+      background: var(--orange-light);
+      color: var(--orange);
+    }
+
+    .tag-hidden {
+      background: var(--purple-light);
+      color: var(--purple);
+    }
+
+    .section-desc {
+      font-size: 13px;
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.7);
+      border: 2px solid transparent;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .check-item:hover { border-color: var(--purple-mid); background: white; }
+
+    .check-item.checked-obvious {
+      background: var(--orange-light);
+      border-color: #f0c4a8;
+    }
+
+    .check-item.checked-hidden {
+      background: var(--purple-light);
+      border-color: var(--purple-mid);
+    }
+
+    .checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid #d0c0b0;
+      background: white;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: white;
+      transition: all 0.2s ease;
+      margin-top: 1px;
+    }
+
+    .check-item.checked-obvious .checkbox {
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+
+    .check-item.checked-hidden .checkbox {
+      background: var(--purple);
+      border-color: var(--purple);
+    }
+
+    .check-label {
+      font-size: 15px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    .submit-wrap {
+      text-align: center;
+      margin-top: 32px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.5s forwards;
+    }
+
+    .submit-btn {
+      background: var(--text-dark);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 16px 40px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease;
+      letter-spacing: 0.02em;
+    }
+
+    .submit-btn:hover { background: var(--purple); transform: translateY(-2px); }
+    .submit-btn:disabled { background: #c4a98a; cursor: not-allowed; transform: none; }
+
+    /* Results */
+    .results {
+      display: none;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .result-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .result-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 900;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+
+    .result-header p {
+      font-size: 15px;
+      color: var(--text-mid);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 480px) {
+      .result-grid { grid-template-columns: 1fr; }
+    }
+
+    .result-card {
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+      border: 2px solid var(--purple-mid);
+    }
+
+    .result-card.obvious-card { border-color: #f0c4a8; }
+
+    .result-count {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .result-count.obvious { color: var(--orange); }
+    .result-count.hidden { color: var(--purple); }
+
+    .result-type {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .result-type.obvious { color: var(--orange); }
+    .result-type.hidden { color: var(--purple); }
+
+    .result-items { list-style: none; }
+
+    .result-items li {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.5;
+      padding: 6px 0;
+      border-bottom: 1px solid #f0e8e0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .result-items li:last-child { border-bottom: none; }
+
+    .result-items li::before {
+      content: '✓';
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .obvious-card .result-items li::before { color: var(--orange); }
+    .hidden-card .result-items li::before { color: var(--purple); }
+
+    .result-message {
+      background: var(--text-dark);
+      border-radius: 18px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-message::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 150px; height: 150px;
+      border-radius: 50%;
+      background: rgba(107,94,168,0.15);
+    }
+
+    .result-message p {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(16px, 2vw, 19px);
+      font-style: italic;
+      color: rgba(255,255,255,0.92);
+      line-height: 1.75;
+      position: relative;
+    }
+
+    .retake-btn {
+      background: transparent;
+      border: 2px solid #e0d0c0;
+      border-radius: 12px;
+      padding: 12px 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .retake-btn:hover { border-color: var(--purple); color: var(--purple); }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 12px;
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Checklist -->
+  <div id="checklist-view">
+    <div class="header">
+      <div class="pill">Lesson 1 · Checklist</div>
+      <h1>Which of these have you seen in your classroom?</h1>
+      <p class="subtitle">Check every sign of disengagement you have personally noticed. Be honest — there are no wrong answers here.</p>
+    </div>
+
+    <!-- Obvious Signs -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-tag tag-obvious">Obvious Signs</span>
+        <span class="section-desc">Easy to spot</span>
+      </div>
+      <div class="check-item" onclick="toggle(this, 'obvious', 'Phone out under the desk or head down on the table')">
+        <div class="checkbox">✓</div>
+        <span class="check-label">Phone out under the desk or head down on the table</span>
+      </div>
+      <div class="check-item" onclick="toggle(this, 'obvious', 'Stopped raising their hand, stopped contributing to discussions, stopped volunteering for anything')">
+        <div class="checkbox">✓</div>
+        <span class="check-label">Stopped raising their hand, stopped contributing to discussions, stopped volunteering for anything</span>
+      </div>
+      <div class="check-item" onclick="toggle(this, 'obvious', 'Grades dropping in a way that does not match what you know they are capable of')">
+        <div class="checkbox">✓</div>
+        <span class="check-label">Grades dropping in a way that does not match what you know they are capable of</span>
+      </div>
+      <div class="check-item" onclick="toggle(this, 'obvious', 'Making excuses to avoid work, procrastinating, or not turning assignments in at all')">
+        <div class="checkbox">✓</div>
+        <span class="check-label">Making excuses to avoid work, procrastinating, or not turning assignments in at all</span>
+      </div>
+      <div class="check-item" onclick="toggle(this, 'obvious', 'Saying it out loud — this is boring, why do we even need this')">
+        <div class="checkbox">✓</div>
+        <span class="check-label">Saying it out loud — "this is boring," "why do we even need this"</span>
+      </div>
+    </div>
+
+    <!-- Hidden Signs -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-tag tag-hidden">Hidden Signs</span>
+        <span class="section-desc">Easy to miss</span>
+      </div>
+      <div class="check-item" onclick="toggle(this, 'hidden', 'Shows up every day, has materials out, follows directions, but stares blankly at the board without writing anything down')">
+        <div class="checkbox">✓</div>
+        <span class="check-label">Shows up every day, has materials out, follows directions, but stares blankly at the board without writing anything down</span>
+      </div>
+      <div class="check-item" onclick="toggle(this, 'hidden', 'Appears to be listening but cannot answer a single question when called on')">
+        <div class="checkbox">✓</div>
+        <span class="check-label">Appears to be listening but cannot answer a single question when called on</span>
+      </div>
+      <div class="check-item" onclick="toggle(this, 'hidden', 'Completes assignments but only does the bare minimum with no real thought or effort')">
+        <div class="checkbox">✓</div>
+        <span class="check-label">Completes assignments but only does the bare minimum with no real thought or effort</span>
+      </div>
+      <div class="check-item" onclick="toggle(this, 'hidden', 'Fidgeting, tapping, or looking around the room while the lesson is happening')">
+        <div class="checkbox">✓</div>
+        <span class="check-label">Fidgeting, tapping, or looking around the room while the lesson is happening</span>
+      </div>
+      <div class="check-item" onclick="toggle(this, 'hidden', 'Has not said a word about struggling or being frustrated — they just quietly stopped caring')">
+        <div class="checkbox">✓</div>
+        <span class="check-label">Has not said a word about struggling or being frustrated — they just quietly stopped caring</span>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button class="submit-btn" id="submit-btn" onclick="showResults()" disabled>See your results</button>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results-view" class="results">
+    <div class="result-header">
+      <div class="pill">Your Results</div>
+      <h2>Here is what you are already seeing.</h2>
+      <p>Every sign you checked is a student who needed something different. The fact that you noticed matters.</p>
+    </div>
+
+    <div class="result-grid">
+      <div class="result-card obvious-card">
+        <div class="result-count obvious" id="obvious-count">0</div>
+        <div class="result-type obvious">Obvious Signs</div>
+        <ul class="result-items" id="obvious-list"></ul>
+      </div>
+      <div class="result-card hidden-card">
+        <div class="result-count hidden" id="hidden-count">0</div>
+        <div class="result-type hidden">Hidden Signs</div>
+        <ul class="result-items" id="hidden-list"></ul>
+      </div>
+    </div>
+
+    <div class="result-message" id="result-message">
+      <p id="result-msg-text"></p>
+    </div>
+
+    <button class="retake-btn" onclick="retake()">Retake the checklist</button>
+    <div class="footer">From Checked Out to Checked In · Lesson 1</div>
+  </div>
+
+</div>
+
+<script>
+  var checked = { obvious: [], hidden: [] };
+
+  function toggle(el, type, label) {
+    var checkedClass = 'checked-' + type;
+    var idx = checked[type].indexOf(label);
+    if (idx > -1) {
+      checked[type].splice(idx, 1);
+      el.classList.remove(checkedClass);
+    } else {
+      checked[type].push(label);
+      el.classList.add(checkedClass);
+    }
+    var total = checked.obvious.length + checked.hidden.length;
+    document.getElementById('submit-btn').disabled = total === 0;
+  }
+
+  function getResultMessage() {
+    var o = checked.obvious.length;
+    var h = checked.hidden.length;
+    var total = o + h;
+
+    if (total === 0) return "";
+
+    if (h > o) {
+      return "You are picking up on the signs that most teachers miss. The hidden signs are the hardest to catch because these students never set off any alarms. Keep going — the next lessons will give you tools to reach them.";
+    } else if (o > h) {
+      return "You are catching the visible signs of disengagement in your classroom. The next step is learning to spot the students who are just as checked out but never make it obvious. This course will help you get there.";
+    } else {
+      return "You are seeing both sides of disengagement in your classroom — the students who make it obvious and the ones who slip through quietly. That awareness is exactly where this course starts.";
+    }
+  }
+
+  function showResults() {
+    document.getElementById('obvious-count').textContent = checked.obvious.length;
+    document.getElementById('hidden-count').textContent = checked.hidden.length;
+
+    var obvList = document.getElementById('obvious-list');
+    var hidList = document.getElementById('hidden-list');
+    obvList.innerHTML = '';
+    hidList.innerHTML = '';
+
+    if (checked.obvious.length === 0) {
+      obvList.innerHTML = '<li>None selected</li>';
+    } else {
+      checked.obvious.forEach(function(item) {
+        var li = document.createElement('li');
+        li.textContent = item;
+        obvList.appendChild(li);
+      });
+    }
+
+    if (checked.hidden.length === 0) {
+      hidList.innerHTML = '<li>None selected</li>';
+    } else {
+      checked.hidden.forEach(function(item) {
+        var li = document.createElement('li');
+        li.textContent = item;
+        hidList.appendChild(li);
+      });
+    }
+
+    document.getElementById('result-msg-text').textContent = getResultMessage();
+    document.getElementById('checklist-view').style.display = 'none';
+    var results = document.getElementById('results-view');
+    results.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function retake() {
+    checked = { obvious: [], hidden: [] };
+    document.querySelectorAll('.check-item').forEach(function(el) {
+      el.classList.remove('checked-obvious', 'checked-hidden');
+    });
+    document.getElementById('submit-btn').disabled = true;
+    document.getElementById('checklist-view').style.display = 'block';
+    document.getElementById('results-view').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
