@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stat Card 3</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: linear-gradient(160deg, #fdf6ec 0%, #fef9f4 100%);
+      min-height: 100vh;
+      padding: 48px 24px;
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 36px;
+      border: 2px solid #eaf5f0;
+      box-shadow: 0 8px 40px rgba(26,107,74,0.1);
+      max-width: 620px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.7s ease 0.1s forwards;
+    }
+    .bg-circle {
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: #eaf5f0;
+      opacity: 0.6;
+    }
+    .source-badge {
+      display: inline-block;
+      background: #eaf5f0;
+      color: #1a6b4a;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .number {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(52px, 10vw, 80px);
+      font-weight: 900;
+      color: #1a6b4a;
+      line-height: 1;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .context {
+      font-size: 17px;
+      color: #2a1f30;
+      line-height: 1.6;
+      font-weight: 500;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .reveal-btn {
+      background: #1a6b4a;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 11px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s ease;
+      position: relative;
+    }
+    .reveal-btn:hover { opacity: 0.85; }
+    .contrast {
+      display: none;
+      background: #eaf5f0;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 14px;
+      color: #1a6b4a;
+      line-height: 1.7;
+      font-weight: 500;
+      animation: fadeIn 0.4s ease;
+      position: relative;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 12px;
+      color: #b09880;
+      font-style: italic;
+    }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+<div style="max-width:620px;width:100%;">
+  <div class="card">
+    <div class="bg-circle"></div>
+    <div class="source-badge">Qualtrics</div>
+    <div class="number" id="number">0<span style="font-size:clamp(24px,4vw,36px)">%</span></div>
+    <p class="context">of students do not feel a strong sense of belonging at school.</p>
+    <button class="reveal-btn" onclick="reveal()">What does this mean for your classroom?</button>
+    <div class="contrast" id="contrast">
+      Nearly half of your students may feel like they do not fully belong in the space where they spend most of their day. A student who does not feel like they belong is not going to invest in the learning happening in that space.
+    </div>
+  </div>
+  <div class="footer">From Checked Out to Checked In · Lesson 1</div>
+</div>
+
+<script>
+  function reveal() {
+    document.querySelector('.reveal-btn').style.display = 'none';
+    document.getElementById('contrast').style.display = 'block';
+  }
+
+  let start = null;
+  const target = 45;
+  const duration = 1600;
+
+  function countUp(timestamp) {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.floor(eased * target);
+    document.getElementById('number').innerHTML = current + '<span style="font-size:clamp(24px,4vw,36px)">%</span>';
+    if (progress < 1) requestAnimationFrame(countUp);
+  }
+
+  setTimeout(() => requestAnimationFrame(countUp), 400);
+</script>
+</body>
+</html>
